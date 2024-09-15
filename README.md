@@ -57,7 +57,7 @@ column names to making joining on the column names easier within Guardium Insigh
   - `gi_url`: URL for the Guardium Insights instance. For SaaS, it's always https://guardium.security.ibm.com/
   - `api_auth_key`: The encoded token generated from the previous step
 
-- Run `gdp_entitlement_gi_enrichment.py` perform the CSV parse and data set insert.
+- Run `gdp_entitlement_gi_enrichment.py` to perform the GDP entitlements CSV parse and data set insert into Guardium Insights.
 - Use your custom data set by [joining it with a report](https://www.ibm.com/docs/en/guardium-insights/saas?topic=reports-joining-report-data-custom-data) 
 in Guardium Insights. A good starter use case is joining the **Assets** report on *Server IP* and *Database name*. This
-will tell you entitlements on a assets basis.
+will tell you the entitlements for particular assets and allow asset owners to review them.
