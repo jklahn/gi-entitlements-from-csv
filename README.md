@@ -1,8 +1,8 @@
 # Enriching Guardium Insights with entitlement information using a CSV file
 
-Entitlements provide granular visibility into things like user entitlements, dormant accounts, and excessive privileges 
+Entitlements provide granular visibility into dormant accounts, and excessive privileges 
 in support of governance controls. The following code is tailored for Guardium Data Protection (GDP) entitlement 
-exports, but can be adjusted for other vendor outputs. 
+exports, but can be potentially adjusted for other vendor outputs. 
 
 Learn more about Guardium entitlements 
 [here](https://www.ibm.com/security/digital-assets/guardium/data-protection-demo/data-risks/3.html).
@@ -14,34 +14,34 @@ Learn more about Guardium entitlements
   - csv
 
 - [Create a custom data](https://www.ibm.com/docs/en/guardium-insights/saas?topic=integrations-working-data-sets) set 
-within Guardium Insights that exactly match those found within the CSV. To match what is expected by the code and csv 
-sample in this repo, use the following definition:
+within Guardium Insights that exactly matches the columns found within the CSV. To match what is expected by the code and csv 
+sample in this repo, use the following data set definition:
 <details>
 <summary>Custom data set definition</summary>
 
 dataset_name: `ENTITLEMENT_INFO`
 
-column_name: `Grantee`, column type: `TEXT`, column size: `256`
+column name: `Grantee`, column type: `TEXT`, column size: `256`
 
-column_name: `Grantee_Type`, column type: `TEXT`, column size: `256`
+column name: `Grantee_Type`, column type: `TEXT`, column size: `256`
 
-column_name: `Granted_Role`, column type: `TEXT`, column size: `256`
+column name: `Granted_Role`, column type: `TEXT`, column size: `256`
 
-column_name: `SqlGuard Timestamp`, column type: `TIMESTAMP`, column size: `10`
+column name: `SqlGuard Timestamp`, column type: `TIMESTAMP`, column size: `10`
 
-column_name: `DB Name`, column type: `TEXT`, column size: `256`
+column name: `DB Name`, column type: `TEXT`, column size: `256`
 
-column_name: `Count of Microsoft SQL Server Role Granted To User And Roles`, column type: `INTEGER`, column size: `4`
+column name: `Count of Microsoft SQL Server Role Granted To User And Roles`, column type: `INTEGER`, column size: `4`
 
-column_name: `Hostname`, column type: `TEXT`, column size: `256`
+column name: `Hostname`, column type: `TEXT`, column size: `256`
 
-column_name: `Service name`, column type: `TEXT`, column size: `256`
+column name: `Service name`, column type: `TEXT`, column size: `256`
 
-column_name: `Server IP`, column type: `TEXT`, column size: `256`
+column name: `Server IP`, column type: `TEXT`, column size: `256`
 
-column_name: `Database name`, column type: `TEXT`, column size: `256`
+column name: `Database name`, column type: `TEXT`, column size: `256`
 
-column_name: `Port`, column type: `INTEGER`, column size: `4`
+column name: `Port`, column type: `INTEGER`, column size: `4`
 
 Note: The standard Datasource Details column, which contains multiple attributes, has been broken out into individual 
 column names to making joining on the column names easier within Guardium Insights reports (later).
