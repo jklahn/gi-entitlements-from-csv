@@ -1,7 +1,9 @@
 import requests
 import csv
+from datetime import datetime
+from json import dumps
 
-# Name of the destination data set within Guardium Insights
+# Name of the destination data set within Guardium Insights or SaaS
 data_set_name = "ENTITLEMENT_INFO"
 
 # Path to the CSV file for entitlements
@@ -31,25 +33,38 @@ def create_json_entries_from_csv(path_to_csv_file):
         # loop through the rows in the CSV file
         for row in reader:
 
-            # Get Datasource Details value and split it up by semicolon, remove blank spaces
-            data_source_details_split_list = [x.strip() for x in row['Datasource Details'].split(':')]
+            # update timestamp to make it zulu/UTC ISO 8601 compatible - 2025-01-01T15:04:05Z
+            if row['SqlGuard Timestamp']:
+                input_format = "%m/%d/%y %H:%M"  # 8/1/24 8:32
+                input_time_str = row['SqlGuard Timestamp']
+                dt_object = datetime.strptime(input_time_str, input_format)
+                row['SqlGuard Timestamp'] = dt_object
 
-            # Remove the empty value produced by having two semicolons together
-            cleaned_data_source_details_split_list = list(filter(None, data_source_details_split_list))
+            output_format = "%Y-%m-%dT%H:%M:%SZ"
+            output_time_str = dt_object.strftime(output_format)
+            row['SqlGuard Timestamp'] = output_time_str
 
-            # Make all the values in the list lowercase, so it's easier to join with GI reports later
-            cleaned_data_source_details_split_list = list(map(lambda x: x.lower(),
-                                                              cleaned_data_source_details_split_list))
+            if row['Datasource Details']:
 
-            # remove old Datasource details from the row JSON
-            row.pop('Datasource Details', None)
+                # Get Datasource Details value and split it up by semicolon, remove blank spaces
+                data_source_details_split_list = [x.strip() for x in row['Datasource Details'].split(':')]
 
-            # add split out Datasource details as new columns and values
-            row.update({'Hostname': cleaned_data_source_details_split_list[0],
-                        'Service name':  cleaned_data_source_details_split_list[1],
-                        'Server IP':  cleaned_data_source_details_split_list[2],
-                        'Database name':  cleaned_data_source_details_split_list[3],
-                        'Port':  cleaned_data_source_details_split_list[4]})
+                # Remove the empty value produced by having two semicolons together
+                cleaned_data_source_details_split_list = list(filter(None, data_source_details_split_list))
+
+                # Make all the values in the list lowercase, so it's easier to join with GI reports later
+                cleaned_data_source_details_split_list = list(map(lambda x: x.lower(),
+                                                                  cleaned_data_source_details_split_list))
+
+                # remove old Datasource details from the row JSON
+                row.pop('Datasource Details', None)
+
+                # add split out Datasource details as new columns and values
+                row.update({'Hostname': cleaned_data_source_details_split_list[0].lower(),
+                            'Service name':  cleaned_data_source_details_split_list[1].lower(),
+                            'Server IP':  cleaned_data_source_details_split_list[2],
+                            'Database name':  cleaned_data_source_details_split_list[3].lower(),
+                            'Port':  cleaned_data_source_details_split_list[4]})
 
             entry_row_json = {'entry': row}     # make the entry
 
